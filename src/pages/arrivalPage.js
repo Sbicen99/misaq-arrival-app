@@ -172,7 +172,7 @@ const Arrival = () => {
             type="submit"
             className="bg-stone-400 text-white py-3 px-6 rounded-lg shadow-md hover:bg-stone-600 transition"
           >
-            Bekræft din deltagelse
+            Bekræft
           </button>
         </form>
       </section>
