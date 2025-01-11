@@ -1,7 +1,7 @@
 {
-  "homepage": "https://Sbicen99.github.io/misaq-arrival-app",
   "name": "misaq-arrival-app",
   "version": "0.1.0",
+  "homepage": "https://sbicen99.github.io/misaq-arrival-app",
   "private": true,
   "dependencies": {
     "cra-template": "1.2.0",
