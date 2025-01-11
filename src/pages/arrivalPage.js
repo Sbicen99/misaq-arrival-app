@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../config/firebaseConfig"; // Import Firestore configuration
 import { collection, addDoc } from "firebase/firestore"; // Firestore functions
+import logo from "../assets/Misaq_logo.png";
 
 const Arrival = () => {
   const [dateTime, setDateTime] = useState({
@@ -14,6 +15,7 @@ const Arrival = () => {
     message: "",
     type: "",
   });
+  const [isWednesday, setIsWednesday] = useState(false); // Track if today is Wednesday
 
   // Get current date and time and format them
   const getDateTime = () => {
@@ -32,6 +34,9 @@ const Arrival = () => {
       date: formattedDate,
       time: formattedTime,
     });
+
+    // Check if today is Wednesday (0 = Sunday, 6 = Saturday)
+    setIsWednesday(currentDate.getDay() === 3);
   };
 
   useEffect(() => {
@@ -109,14 +114,20 @@ const Arrival = () => {
         </div>
       )}
 
-      <header className="bg-stone-500 text-white">
+      <header className="bg-stone-500 text-white relative">
         <div className="container mx-auto px-4 py-12 text-center">
           <h1 className="text-4xl font-bold mb-4">VELKOMMEN TIL KURSET</h1>
           <p className="text-lg">
-            Lad os sammen arbejde for at styrke vores tro, udbrede godhed og
+            Lad os sammen arbejde for at styrke vores deen, udbrede godhed og
             følge vejen mod Allahs (SWT) tilfredshed!
           </p>
         </div>
+
+        <img
+          src={logo}
+          alt="Misaq logo"
+          className="absolute top-4 right-4 w-16 h-16"
+        />
       </header>
 
       <section className="container mx-auto px-4 py-8 bg-white shadow-lg rounded-lg mt-8">
@@ -171,6 +182,7 @@ const Arrival = () => {
           <button
             type="submit"
             className="bg-stone-400 text-white py-3 px-6 rounded-lg shadow-md hover:bg-stone-600 transition"
+            disabled={!isWednesday} // Disable the button if today is not Wednesday
           >
             Bekræft
           </button>
