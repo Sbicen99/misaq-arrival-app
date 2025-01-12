@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { db } from "../config/firebaseConfig"; // Import Firestore configuration
 import { collection, addDoc } from "firebase/firestore"; // Firestore functions
 import logo from "../assets/Misaq_logo.png";
+import "../styles/arrivalPage.css";
 
 const Arrival = () => {
   const [dateTime, setDateTime] = useState({
@@ -126,29 +127,32 @@ const Arrival = () => {
         <img
           src={logo}
           alt="Misaq logo"
-          className="absolute top-4 right-4 w-16 h-16"
+          className="logo-img absolute top-4 right-4 w-16 h-16"
         />
       </header>
 
-      <section className="container mx-auto px-4 py-8 bg-white shadow-lg rounded-lg mt-8">
-        <div className="grid md:grid-cols-2 gap-8">
+      <section className="container mx-auto px-4 py-8 bg-white shadow-lg rounded-lg mt-8 w-full max-w-full overflow-x-auto">
+        {" "}
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
               KURSUSDETALJER
             </h2>
-            <ul className="list-disc list-inside text-gray-700 space-y-2">
-              <li>
-                <strong>KURSUSNAVN:</strong> Grundlæggende islamiske studier -
-                Misaq
+            <ul className="list-disc list-inside text-gray-700 space-y-2 pl-6">
+              <li className="flex items-center whitespace-nowrap">
+                <strong className="mr-2">KURSUSNAVN:</strong> Grundlæggende
+                islamiske studier
               </li>
-              <li>
-                <strong>DATO:</strong> {dateTime.date} - {dateTime.time}
+              <li className="flex items-center whitespace-nowrap">
+                <strong className="mr-2">DATO:</strong> {dateTime.date} -{" "}
+                {dateTime.time}
               </li>
-              <li>
-                <strong>LOKATION:</strong> Retortvej 38, 2500 Valby
+              <li className="flex items-center whitespace-nowrap">
+                <strong className="mr-2">LOKATION:</strong> Retortvej 38, 2500
+                Valby
               </li>
-              <li>
-                <strong>TIDSPUNKT:</strong> 18:30 - 21:00
+              <li className="flex items-center whitespace-nowrap">
+                <strong className="mr-2">TIDSPUNKT:</strong> 18:30 - 21:00
               </li>
             </ul>
             <p className="mt-4 text-gray-600">Husk re-eksamen d. 22. januar</p>
@@ -182,7 +186,7 @@ const Arrival = () => {
           <button
             type="submit"
             className="bg-stone-400 text-white py-3 px-6 rounded-lg shadow-md hover:bg-stone-600 transition"
-            disabled={!isWednesday} // Disable the button if today is not Wednesday
+            //disabled={!isWednesday} // Disable the button if today is not Wednesday
           >
             Bekræft
           </button>
