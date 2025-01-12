@@ -45,3 +45,8 @@
   background-color: #444; /* Slightly darker gray for hover */
   color: #fff;
 }
+
+.custom-bg-stone {
+  background-color: #a8a29e; /* stone-600 color in Tailwind */
+  color: white;
+}
