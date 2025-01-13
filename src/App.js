@@ -5,13 +5,10 @@ import AdminPanel from "./pages/adminPanel";
 
 function App() {
   return (
-    <HashRouter>
-      <Routes>
-        {/* Use `element` instead of `component` */}
-        <Route path="/" element={<Arrival />} />
-        <Route path="/admin" element={<AdminPanel />} />
-      </Routes>
-    </HashRouter>
+    <div>
+      <Arrival></Arrival>
+      <AdminPanel></AdminPanel>
+    </div>
   );
 }
 
