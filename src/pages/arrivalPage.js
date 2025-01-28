@@ -155,7 +155,7 @@ const Arrival = () => {
                 <strong className="mr-2">TIDSPUNKT:</strong> 18:30 - 21:00
               </li>
             </ul>
-            <p className="mt-4 text-gray-600">Husk re-eksamen d. 22. januar</p>
+            {/* <p className="mt-4 text-gray-600">Husk re-eksamen d. 22. januar</p>*/}
           </div>
         </div>
       </section>
