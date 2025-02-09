@@ -10,7 +10,7 @@ import {
   isSameYear,
   getISOWeek,
 } from "date-fns";
-import * as XLSX from "xlsx"; // added Excel export functionality
+import * as XLSX from "xlsx"; // Added Excel export functionality
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
