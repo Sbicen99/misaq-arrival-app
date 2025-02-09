@@ -10,15 +10,16 @@ import {
   isSameYear,
   getISOWeek,
 } from "date-fns";
+import * as XLSX from "xlsx";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all"); // Default filter
-  const [selectedWeek, setSelectedWeek] = useState(""); // Custom week filter
-  const [password, setPassword] = useState(""); // Password state
-  const [showTable, setShowTable] = useState(false); // State to control visibility of the table
+  const [filter, setFilter] = useState("all");
+  const [selectedWeek, setSelectedWeek] = useState("");
+  const [password, setPassword] = useState("");
+  const [showTable, setShowTable] = useState(false);
   const adminPass = process.env.REACT_APP_ADMIN_PAGE_PASSWORD;
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const AdminPanel = () => {
         const snapshot = await getDocs(arrivalsRef);
         const usersList = snapshot.docs.map((doc) => doc.data());
         setUsers(usersList);
-        setFilteredUsers(usersList); // Set initial filtered users
+        setFilteredUsers(usersList);
       } catch (error) {
         console.error("Error fetching users: ", error);
       } finally {
@@ -39,17 +40,12 @@ const AdminPanel = () => {
     fetchUsers();
   }, []);
 
-  // Parse and filter data based on the selected filter
   useEffect(() => {
     const now = new Date();
-    const parsedUsers = users.map((user) => {
-      const parsedDate = parse(
-        user.arrivalTime,
-        "dd/MM/yyyy - HH:mm",
-        new Date()
-      );
-      return { ...user, parsedDate };
-    });
+    const parsedUsers = users.map((user) => ({
+      ...user,
+      parsedDate: parse(user.arrivalTime, "dd/MM/yyyy - HH:mm", new Date()),
+    }));
 
     let filtered = parsedUsers;
 
@@ -74,28 +70,43 @@ const AdminPanel = () => {
     setFilteredUsers(filtered);
   }, [filter, users, selectedWeek]);
 
-  const getButtonClass = (filterType) => {
-    // Change color to dark gray when active, light gray by default
-    return `btn btn-sm ${
-      filter === filterType
-        ? "btn-dark-gray text-white" // Active button styling
-        : "btn-light-gray"
+  const getButtonClass = (filterType) =>
+    `btn btn-sm ${
+      filter === filterType ? "btn-dark-gray text-white" : "btn-light-gray"
     }`;
-  };
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
-    // Simple password check (you can modify this with your own validation)
     if (password === adminPass) {
-      setShowTable(true); // Show the table if password is correct
+      setShowTable(true);
     } else {
       alert("Incorrect password!");
     }
   };
 
+  const exportToExcel = () => {
+    if (filteredUsers.length === 0) {
+      alert("No data to export!");
+      return;
+    }
+
+    const dataToExport = filteredUsers.map((user) => ({
+      NAVN: user.fullName || "Unknown",
+      "TJEKKET IND": user.parsedDate
+        ? format(user.parsedDate, "dd/MM/yyyy - HH:mm")
+        : "Not Checked In",
+      STATUS: "AKTIV",
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tilmeldte");
+
+    XLSX.writeFile(workbook, "TilmeldteData.xlsx");
+  };
+
   return (
     <div className="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
-      {/* Password Form */}
       {!showTable && (
         <div
           className="container d-flex justify-content-center align-items-center"
@@ -107,7 +118,7 @@ const AdminPanel = () => {
                 <div className="forms-inputs mb-4">
                   <span>Password</span>
                   <input
-                    autocomplete="off"
+                    autoComplete="off"
                     type="password"
                     className="form-control"
                     placeholder="Enter your password"
@@ -129,7 +140,6 @@ const AdminPanel = () => {
         </div>
       )}
 
-      {/* Admin Panel Table (Visible after password is correct) */}
       {showTable && (
         <div className="h-screen flex-grow-1 overflow-y-lg-auto">
           <header className="bg-surface-primary border-bottom pt-6">
@@ -146,10 +156,15 @@ const AdminPanel = () => {
           <main className="py-6 bg-surface-secondary">
             <div className="container-fluid">
               <div className="card shadow border-0 mb-7">
-                <div className="card-header d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0">TILMELDTE</h5>
-                  {/* Filter Buttons */}
-                  <div className="btn-group">
+                <div className="card-header flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <h5 className="mb-0">
+                    TILMELDTE{" "}
+                    <span className="badge badge-dark">
+                      {filteredUsers.length}
+                    </span>
+                  </h5>
+
+                  <div className="flex flex-wrap justify-center sm:justify-end gap-2">
                     <button
                       className={getButtonClass("day")}
                       onClick={() => setFilter("day")}
@@ -180,12 +195,18 @@ const AdminPanel = () => {
                     >
                       ALLE
                     </button>
+                    <button
+                      className="btn btn-success btn-sm"
+                      onClick={exportToExcel}
+                    >
+                      Eksportér til Excel
+                    </button>
                   </div>
-                  {/* Custom Week Filter */}
-                  <div className="custom-week-filter ms-3">
+
+                  <div className="flex justify-center sm:justify-end">
                     <input
                       type="number"
-                      className="form-control form-control-sm"
+                      className="form-control form-control-sm w-40 text-center"
                       placeholder="INDTAST UGE NR."
                       value={selectedWeek}
                       onChange={(e) => {
@@ -195,6 +216,7 @@ const AdminPanel = () => {
                     />
                   </div>
                 </div>
+
                 <div className="table-responsive">
                   {loading ? (
                     <p>Loading...</p>
@@ -210,11 +232,7 @@ const AdminPanel = () => {
                       <tbody>
                         {filteredUsers.map((user, index) => (
                           <tr key={index}>
-                            <td>
-                              <a className="text-heading font-semibold">
-                                {user.fullName || "Unknown"}
-                              </a>
-                            </td>
+                            <td>{user.fullName || "Unknown"}</td>
                             <td>
                               {user.parsedDate
                                 ? format(user.parsedDate, "dd/MM/yyyy - HH:mm")
