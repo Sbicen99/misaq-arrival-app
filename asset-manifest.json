@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/misaq-arrival-app/static/css/main.3e14d3be.css",
+    "main.js": "/misaq-arrival-app/static/js/main.a991844f.js",
+    "static/js/488.5ef7d84b.chunk.js": "/misaq-arrival-app/static/js/488.5ef7d84b.chunk.js",
+    "index.html": "/misaq-arrival-app/index.html",
+    "main.3e14d3be.css.map": "/misaq-arrival-app/static/css/main.3e14d3be.css.map",
+    "main.a991844f.js.map": "/misaq-arrival-app/static/js/main.a991844f.js.map",
+    "488.5ef7d84b.chunk.js.map": "/misaq-arrival-app/static/js/488.5ef7d84b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3e14d3be.css",
+    "static/js/main.a991844f.js"
+  ]
+}
